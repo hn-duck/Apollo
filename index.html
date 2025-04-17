@@ -2,84 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Apollo 11 Moon Landing Simulation</title>
+  <title>Apollo 11 Moon Landing</title>
   <style>
-    body { margin: 0; overflow: hidden; background: black; }
+    body { margin: 0; overflow: hidden; background-color: black; }
     canvas { display: block; }
   </style>
 </head>
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/examples/js/loaders/GLTFLoader.js"></script>
 
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({antialias: true});
+    const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     // Lighting
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    sunLight.position.set(10, 20, 10);
-    scene.add(sunLight);
-    scene.add(new THREE.AmbientLight(0x333333));
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 1).normalize();
+    scene.add(directionalLight);
 
-    // Controls
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-
-    // Moon Surface
+    // Moon surface
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('moon_surface.jpg', function(texture) { // 
-      const moonGeometry = new THREE.PlaneGeometry(200, 200);
+    textureLoader.load('2k_moon.jpg', function(texture) {
+      const moonGeometry = new THREE.SphereGeometry(10, 64, 64);
       const moonMaterial = new THREE.MeshPhongMaterial({ map: texture });
       const moon = new THREE.Mesh(moonGeometry, moonMaterial);
-      moon.rotation.x = -Math.PI / 2;
       scene.add(moon);
     });
 
-    // Lunar Module 3D Model (GLB)
+    // Lunar Module
     const loader = new THREE.GLTFLoader();
-    loader.load('lunar_module.glb', function(gltf) { // Update path here
-      const lander = gltf.scene;
-      lander.scale.set(2, 2, 2);
-      lander.position.y = 10;
-      scene.add(lander);
-
-      // Simple gravity simulation
-      let velocity = -0.01;
-      function descend() {
-        requestAnimationFrame(descend);
-        if (lander.position.y > 1.5) {
-          lander.position.y += velocity;
-          velocity -= 0.0003; // gravity effect
-        }
-        controls.update();
-        renderer.render(scene, camera);
-      }
-      descend();
+    loader.load('Apollo Lunar Module.glb', function(gltf) {
+      const model = gltf.scene;
+      model.scale.set(0.05, 0.05, 0.05);
+      model.position.set(0, 5, 0);
+      scene.add(model);
     });
 
-    // Apollo 11 Audio (Mission Control to Eagle)
-    const listener = new THREE.AudioListener();
-    camera.add(listener);
-    const sound = new THREE.Audio(listener);
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load('https://www.nasa.gov/mp3/640133main_apollo11_landing.mp3', function(buffer) {
-      sound.setBuffer(buffer);
-      sound.setLoop(false);
-      sound.setVolume(1.0);
-      sound.play();
-    });
+    // Camera position
+    camera.position.z = 20;
 
-    // Camera Position
-    camera.position.set(10, 10, 20);
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+      scene.rotation.y += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
 
-    // Responsive
     window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
