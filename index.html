@@ -32,7 +32,7 @@
 
     // Moon Surface
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('https://www.solarsystemscope.com/textures/download/2k_moon.jpg', (texture) => {
+    textureLoader.load('moon_surface.jpg', function(texture) { // 
       const moonGeometry = new THREE.PlaneGeometry(200, 200);
       const moonMaterial = new THREE.MeshPhongMaterial({ map: texture });
       const moon = new THREE.Mesh(moonGeometry, moonMaterial);
