@@ -26,7 +26,7 @@
 
     // Moon surface
     const textureLoader = new THREE.TextureLoader();
-    loader.load('Apollo%20Lunar%20Module.glb', function(gltf) {
+    textureLoader.load('2k_moon.jpg', function(texture) {
       const moonGeometry = new THREE.SphereGeometry(10, 64, 64);
       const moonMaterial = new THREE.MeshPhongMaterial({ map: texture });
       const moon = new THREE.Mesh(moonGeometry, moonMaterial);
@@ -35,7 +35,7 @@
 
     // Lunar Module
     const loader = new THREE.GLTFLoader();
-    loader.load('Apollo Lunar Module.glb', function(gltf) {
+    loader.load('Apollo%20Lunar%20Module.glb', function(gltf) {
       const model = gltf.scene;
       model.scale.set(0.05, 0.05, 0.05);
       model.position.set(0, 5, 0);
@@ -45,7 +45,6 @@
     // Camera position
     camera.position.z = 20;
 
-    // Render loop
     function animate() {
       requestAnimationFrame(animate);
       scene.rotation.y += 0.001;
