@@ -26,7 +26,7 @@
 
     // Moon surface
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('2k_moon.jpg', function(texture) {
+    loader.load('Apollo%20Lunar%20Module.glb', function(gltf) {
       const moonGeometry = new THREE.SphereGeometry(10, 64, 64);
       const moonMaterial = new THREE.MeshPhongMaterial({ map: texture });
       const moon = new THREE.Mesh(moonGeometry, moonMaterial);
