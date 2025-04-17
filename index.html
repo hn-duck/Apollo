@@ -42,7 +42,7 @@
 
     // Lunar Module 3D Model (GLB)
     const loader = new THREE.GLTFLoader();
-    loader.load('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/LunarModule/glTF-Binary/LunarModule.glb', function(gltf) {
+    loader.load('lunar_module.glb', function(gltf) { // Update path here
       const lander = gltf.scene;
       lander.scale.set(2, 2, 2);
       lander.position.y = 10;
